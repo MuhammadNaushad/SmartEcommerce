@@ -6,7 +6,7 @@ import { IS_ANDROID } from "../../constants/constants";
 
 interface AppSafeViewProps {
   children: ReactNode;
-  style: ViewStyle;
+  style?: ViewStyle;
 }
 
 const AppSafeView = ({ children, style }: AppSafeViewProps) => {

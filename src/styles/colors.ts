@@ -7,4 +7,5 @@ export const AppColor = {
   disablesGray: "#D3D3D3",
   blueGray: "#E6E8EA",
   midGray: "#939393",
+  borderColor: "#ccc",
 };
