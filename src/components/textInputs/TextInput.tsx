@@ -1,4 +1,5 @@
 import {
+  KeyboardTypeOptions,
   StyleProp,
   StyleSheet,
   Text,
@@ -16,7 +17,7 @@ interface AppTextInputProps {
   onTextChange: (text: string) => void;
   placeholder: string;
   secureTextEntry?: boolean;
-  keyboardType?: any;
+  keyboardType?: KeyboardTypeOptions;
   style?: StyleProp<TextInputProps>;
 }
 
@@ -29,16 +30,14 @@ const AppTextInput = ({
   style,
 }: AppTextInputProps) => {
   return (
-    <View>
-      <TextInput
-        value={value}
-        onChangeText={onTextChange}
-        placeholder={placeholder}
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
-        style={[styles.input, style]}
-      ></TextInput>
-    </View>
+    <TextInput
+      value={value}
+      onChangeText={onTextChange}
+      placeholder={placeholder}
+      secureTextEntry={secureTextEntry}
+      keyboardType={keyboardType}
+      style={[styles.input, style]}
+    ></TextInput>
   );
 };
 

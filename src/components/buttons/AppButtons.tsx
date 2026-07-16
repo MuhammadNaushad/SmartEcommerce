@@ -42,7 +42,11 @@ const AppButtons = ({
       disabled={disabled}
     >
       <AppText
-        style={[styles.titleText, textStyle]}
+        style={[
+          styles.titleText,
+          textStyle,
+          isOutline && { color: AppColor.black },
+        ]}
         children={title}
         variant="bold"
       ></AppText>

@@ -7,34 +7,14 @@ import FlashMessage, { showMessage } from "react-native-flash-message";
 import Toast from "react-native-toast-message";
 import AppButtons from "./src/components/buttons/AppButtons";
 import AppTextInput from "./src/components/textInputs/TextInput";
+import SignInScreen from "./src/screens/auth/SignInScreen";
+import SignUpScreen from "./src/screens/auth/SignUpScreen";
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <>
-        <AppSafeView
-          children={
-            <View>
-              <AppTextInput
-                value={""}
-                onTextChange={(value) => {}}
-                placeholder="Enter Email"
-              />
-              <AppTextInput
-                value={""}
-                onTextChange={(value) => {}}
-                placeholder="Enter Email"
-              />
-              <AppButtons
-                onPress={function (): void {
-                  throw new Error("Function not implemented.");
-                }}
-                title={"Login"}
-                textStyle={{ fontWeight: "500" }}
-              ></AppButtons>
-            </View>
-          }
-        ></AppSafeView>
+        <SignUpScreen />
         <FlashMessage position="center" />
         <Toast />
       </>
