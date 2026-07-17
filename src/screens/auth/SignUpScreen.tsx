@@ -17,11 +17,14 @@ import { IS_IOS } from "../../constants/constants";
 import AppKeyboardAvoidingView from "../../components/keyboard/AppKeyboardAvoidingView";
 import AppText from "../../components/texts/AppText";
 import { AppColor } from "../../styles/colors";
+import { useNavigation } from "@react-navigation/native";
 
 const SignUpScreen = () => {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [UserName, setUserName] = useState("");
+
+  const navigator = useNavigation();
 
   return (
     <AppSafeView style={styles.container}>
@@ -59,7 +62,9 @@ const SignUpScreen = () => {
             textStyle={{ fontWeight: "500" }}
           />
           <AppButtons
-            onPress={() => {}}
+            onPress={() => {
+              navigator.navigate("LoginScreen");
+            }}
             title="Login"
             textStyle={{ fontWeight: "500" }}
             isOutline={true}

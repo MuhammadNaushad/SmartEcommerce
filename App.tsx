@@ -9,14 +9,19 @@ import AppButtons from "./src/components/buttons/AppButtons";
 import AppTextInput from "./src/components/textInputs/TextInput";
 import SignInScreen from "./src/screens/auth/SignInScreen";
 import SignUpScreen from "./src/screens/auth/SignUpScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import AuthStack from "./src/navigations/AuthStack";
+import MainAppStack from "./src/navigations/MainAppStack";
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <>
-        <SignUpScreen />
-        <FlashMessage position="center" />
-        <Toast />
+        <NavigationContainer>
+          <MainAppStack />
+          <FlashMessage position="center" />
+          <Toast />
+        </NavigationContainer>
       </>
     </SafeAreaProvider>
   );
