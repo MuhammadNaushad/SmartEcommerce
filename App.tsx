@@ -1,28 +1,28 @@
-import { StatusBar } from "expo-status-bar";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
-import AppText from "./src/components/texts/AppText";
+import { ActivityIndicator, StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import AppSafeView from "./src/components/views/AppSafeView";
-import FlashMessage, { showMessage } from "react-native-flash-message";
+import FlashMessage from "react-native-flash-message";
 import Toast from "react-native-toast-message";
-import AppButtons from "./src/components/buttons/AppButtons";
-import AppTextInput from "./src/components/textInputs/TextInput";
-import SignInScreen from "./src/screens/auth/SignInScreen";
-import SignUpScreen from "./src/screens/auth/SignUpScreen";
+
 import { NavigationContainer } from "@react-navigation/native";
-import AuthStack from "./src/navigations/AuthStack";
 import MainAppStack from "./src/navigations/MainAppStack";
+import { useFonts } from "expo-font";
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    NunitoBold: require("./src/assets/fonts/Nunito-Bold.ttf"),
+    NunitoMedium: require("./src/assets/fonts/Nunito-Medium.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size={"large"} />;
+  }
   return (
     <SafeAreaProvider>
-      <>
-        <NavigationContainer>
-          <MainAppStack />
-          <FlashMessage position="center" />
-          <Toast />
-        </NavigationContainer>
-      </>
+      <NavigationContainer>
+        <MainAppStack />
+        <FlashMessage position="center" />
+        <Toast />
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
