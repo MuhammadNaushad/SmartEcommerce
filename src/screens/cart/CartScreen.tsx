@@ -11,15 +11,10 @@ import TotalViews from "../../components/cart/TotalViews";
 import { ShippingFee, Tax } from "../../constants/constants";
 import { paddingHorizontal } from "../../styles/sharedStyles";
 import AppButtons from "../../components/buttons/AppButtons";
-const tempItem = {
-  id: 1,
-  price: 1199,
-  title: "iPhone 16 Pro Max",
-  imageURL:
-    "https://2b.com.eg/media/catalog/product/cache/661473ab953cdcdf4c3b607144109b90/m/a/ma658.jpg",
-  qty: 1,
-};
+import { useNavigation } from "@react-navigation/native";
+
 const CartScreen = () => {
+  const navigation = useNavigation();
   return (
     <AppSafeView>
       <HomeHeaders />
@@ -37,7 +32,12 @@ const CartScreen = () => {
           fee={ShippingFee}
           grandtotal={699}
         />
-        <AppButtons title="Continue" onPress={() => {}}></AppButtons>
+        <AppButtons
+          title="Continue"
+          onPress={() => {
+            navigation.navigate("CheckoutScreen");
+          }}
+        ></AppButtons>
       </View>
     </AppSafeView>
   );

@@ -3,6 +3,7 @@ import SignInScreen from "../screens/auth/SignInScreen";
 import SignUpScreen from "../screens/auth/SignUpScreen";
 import MainAppBottomTabs from "./MainAppBottomTabs";
 import AuthStack from "./AuthStack";
+import CheckoutScreen from "../screens/cart/CheckoutScreen";
 
 const Stack = createStackNavigator();
 
@@ -13,6 +14,11 @@ const MainAppStack = () => {
       <Stack.Screen
         name="MainAppBottomTabs"
         component={MainAppBottomTabs}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="CheckoutScreen"
+        component={CheckoutScreen}
+        options={{ headerShown: true }}
       ></Stack.Screen>
     </Stack.Navigator>
   );
