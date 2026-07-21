@@ -4,6 +4,8 @@ import SignUpScreen from "../screens/auth/SignUpScreen";
 import MainAppBottomTabs from "./MainAppBottomTabs";
 import AuthStack from "./AuthStack";
 import CheckoutScreen from "../screens/cart/CheckoutScreen";
+import OrdersScreen from "../screens/orders/OrdersScreen";
+import { AppColor } from "../styles/colors";
 
 const Stack = createStackNavigator();
 
@@ -16,9 +18,22 @@ const MainAppStack = () => {
         component={MainAppBottomTabs}
       ></Stack.Screen>
       <Stack.Screen
-        name="CheckoutScreen"
+        name="Checkout Screen"
         component={CheckoutScreen}
-        options={{ headerShown: true }}
+        options={{
+          headerShown: true,
+          headerBackTitle: "",
+          headerTintColor: AppColor.primary,
+        }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="Orders Screen"
+        component={OrdersScreen}
+        options={{
+          headerShown: true,
+          headerTintColor: AppColor.primary,
+          headerBackTitle: "",
+        }}
       ></Stack.Screen>
     </Stack.Navigator>
   );

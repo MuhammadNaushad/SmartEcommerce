@@ -32,19 +32,19 @@ export default AppText;
 
 const styles = StyleSheet.create({
   bold: {
-    fontSize: s(18),
+    fontSize: 18,
     color: AppColor.black,
     fontWeight: "700",
     fontFamily: AppFont.Bold,
   },
   medium: {
-    fontSize: s(16),
+    fontSize: 16,
     color: AppColor.black,
     fontWeight: "500",
     fontFamily: AppFont.Medium,
   },
   small: {
-    fontSize: s(14),
+    fontSize: 14,
     color: AppColor.black,
   },
 });

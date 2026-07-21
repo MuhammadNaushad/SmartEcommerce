@@ -35,7 +35,7 @@ const CartScreen = () => {
         <AppButtons
           title="Continue"
           onPress={() => {
-            navigation.navigate("CheckoutScreen");
+            navigation.navigate("Checkout Screen");
           }}
         ></AppButtons>
       </View>
