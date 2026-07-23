@@ -6,6 +6,8 @@ import Toast from "react-native-toast-message";
 import { NavigationContainer } from "@react-navigation/native";
 import MainAppStack from "./src/navigations/MainAppStack";
 import { useFonts } from "expo-font";
+import { Provider } from "react-redux";
+import { store } from "./src/store/store";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -17,13 +19,15 @@ export default function App() {
     return <ActivityIndicator size={"large"} />;
   }
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <MainAppStack />
-        <FlashMessage position="center" />
-        <Toast />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <MainAppStack />
+          <FlashMessage position="center" />
+          <Toast />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
 

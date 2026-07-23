@@ -12,33 +12,60 @@ import { ShippingFee, Tax } from "../../constants/constants";
 import { paddingHorizontal } from "../../styles/sharedStyles";
 import AppButtons from "../../components/buttons/AppButtons";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import {
+  addItemToCart,
+  removeItemToCart,
+  removeProductFromCart,
+} from "../../store/reducers/cartSlice";
 
 const CartScreen = () => {
   const navigation = useNavigation();
+  const { items } = useSelector((state: RootState) => state.cartSlice);
+  const dispatch = useDispatch();
+  console.log(items);
+  const getTotalAmount = items.reduce((acc, item) => acc + item.sum, 0);
+  const getGrandTotal = getTotalAmount + Tax + ShippingFee;
+
   return (
     <AppSafeView>
       <HomeHeaders />
-      {/* <EmptyCart /> */}
-      <View style={styles.container}>
-        <FlatList
-          data={products}
-          keyExtractor={(item) => item.id.toString()}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => <CartItem item={item} />}
-        ></FlatList>
-        <TotalViews
-          itemPrice={599}
-          tax={Tax}
-          fee={ShippingFee}
-          grandtotal={699}
-        />
-        <AppButtons
-          title="Continue"
-          onPress={() => {
-            navigation.navigate("Checkout Screen");
-          }}
-        ></AppButtons>
-      </View>
+      {items.length === 0 ? (
+        <EmptyCart />
+      ) : (
+        <View style={styles.container}>
+          <FlatList
+            data={items}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <CartItem
+                item={item}
+                onIncreasePress={() => dispatch(addItemToCart(item.product))}
+                onDecreasePress={() => {
+                  dispatch(removeItemToCart(item.product));
+                }}
+                onDeletePress={() => {
+                  dispatch(removeProductFromCart(item.product));
+                }}
+              />
+            )}
+          ></FlatList>
+          <TotalViews
+            itemPrice={getTotalAmount}
+            tax={Tax}
+            fee={ShippingFee}
+            grandtotal={getGrandTotal}
+          />
+          <AppButtons
+            title="Continue"
+            onPress={() => {
+              navigation.navigate("Checkout Screen");
+            }}
+          ></AppButtons>
+        </View>
+      )}
+      {/*  */}
     </AppSafeView>
   );
 };

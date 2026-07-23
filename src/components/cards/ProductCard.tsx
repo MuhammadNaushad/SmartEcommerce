@@ -13,11 +13,11 @@ interface ProductCardProps {
   onCartPress: () => void;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, onCartPress }: ProductCardProps) => {
   return (
     <View style={styles.container}>
       {/* Cart Button */}
-      <TouchableOpacity style={styles.addToCartButton}>
+      <TouchableOpacity style={styles.addToCartButton} onPress={onCartPress}>
         <Ionicons name="cart" size={s(15)} color={AppColor.white}></Ionicons>
       </TouchableOpacity>
       {/* IMAGE */}

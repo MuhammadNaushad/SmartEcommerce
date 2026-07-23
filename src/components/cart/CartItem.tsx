@@ -13,9 +13,10 @@ import { AppFont } from "../../styles/fontName";
 import { AppColor } from "../../styles/colors";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { CartItemProps } from "../../types/cartItemType";
+import { CartItemSlice } from "../../store/reducers/cartSlice";
 
 interface CartItemMainProps {
-  item: CartItemProps;
+  item: CartItemSlice;
   onDeletePress?: () => void;
   onIncreasePress?: () => void;
   onDecreasePress?: () => void;
@@ -30,12 +31,15 @@ const CartItem = ({
     <View style={styles.container}>
       {/* Image view*/}
       <View style={styles.imgContainer}>
-        <Image source={{ uri: item.imageURL }} style={styles.image}></Image>
+        <Image
+          source={{ uri: item.product.imageURL }}
+          style={styles.image}
+        ></Image>
       </View>
       {/* Details View */}
       <View style={styles.detailsContainer}>
-        <AppText style={styles.itemtitle} children={item.title} />
-        <AppText style={styles.itemPrice} children={item.price} />
+        <AppText style={styles.itemtitle} children={item.product.title} />
+        <AppText style={styles.itemPrice} children={item.sum} />
         {/* Quantity View */}
         <View style={styles.qtyContainer}>
           <TouchableOpacity onPress={onIncreasePress} style={styles.iconButton}>
@@ -45,12 +49,8 @@ const CartItem = ({
               color={AppColor.primary}
             ></FontAwesome>
           </TouchableOpacity>
-          <AppText
-            style={styles.qtyStr}
-            children={item.qty}
-            onPress={onDecreasePress}
-          />
-          <TouchableOpacity style={styles.iconButton}>
+          <AppText style={styles.qtyStr} children={item.qty} />
+          <TouchableOpacity style={styles.iconButton} onPress={onDecreasePress}>
             <FontAwesome
               name="minus"
               size={s(10)}
