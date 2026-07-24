@@ -18,7 +18,7 @@ interface AppTextInputProps {
   placeholder: string;
   secureTextEntry?: boolean;
   keyboardType?: KeyboardTypeOptions;
-  style?: StyleProp<TextInputProps>;
+  style?: StyleProp<TextStyle>;
 }
 
 const AppTextInput = ({

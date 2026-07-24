@@ -8,9 +8,37 @@ import { AppColor } from "../../styles/colors";
 import AppTextInput from "../../components/textInputs/TextInput";
 import AppButtons from "../../components/buttons/AppButtons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import AppTextInputController from "../../components/textInputs/AppTextInputController";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
+type FormData = yup.InferType<typeof schema>;
+
+const schema = yup.object({
+  fullName: yup
+    .string()
+    .required("Name is required")
+    .min(3, "Min 3 chars required"),
+  mobile: yup
+    .string()
+    .required("Mobile number is required")
+    .matches(/^[0-9]+$/, "Number must be only digits")
+    .min(10, "Min 10 digits required"),
+  address: yup
+    .string()
+    .required("Address is required")
+    .min(5, "Min 5 chars required"),
+});
 const CheckoutScreen = () => {
   const insets = useSafeAreaInsets();
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const saveOrder = (formData: FormData) => {
+    console.log(formData);
+  };
 
   return (
     <View
@@ -21,9 +49,21 @@ const CheckoutScreen = () => {
     >
       <View style={{ paddingHorizontal: paddingHorizontal }}>
         <View style={styles.inputsContainer}>
-          <AppTextInput placeholder="Full Name" />
-          <AppTextInput placeholder="Phone Number" />
-          <AppTextInput placeholder="Detailed Address" />
+          <AppTextInputController
+            control={control}
+            name="fullName"
+            placeholder="Full Name"
+          />
+          <AppTextInputController
+            control={control}
+            name="mobile"
+            placeholder="Phone Number"
+          />
+          <AppTextInputController
+            control={control}
+            name="address"
+            placeholder="Detailed Address"
+          />
         </View>
       </View>
 
@@ -34,7 +74,7 @@ const CheckoutScreen = () => {
           { paddingBottom: insets.bottom || vs(15) },
         ]}
       >
-        <AppButtons title="Confirm" />
+        <AppButtons title="Confirm" onPress={handleSubmit(saveOrder)} />
       </View>
     </View>
   );

@@ -18,12 +18,45 @@ import AppKeyboardAvoidingView from "../../components/keyboard/AppKeyboardAvoidi
 import AppText from "../../components/texts/AppText";
 import { AppColor } from "../../styles/colors";
 import { useNavigation } from "@react-navigation/native";
+import AppTextInputController from "../../components/textInputs/AppTextInputController";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+type FormData = yup.InferType<typeof schema>;
+
+const schema = yup.object({
+  email: yup
+    .string()
+    .required("Email is required")
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "invalid email",
+    )
+
+    .min(3, "Min 3 chars required"),
+  password: yup
+    .string()
+    .required("Mobile number is required")
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "Number must be only digits",
+    )
+    .min(10, "Min 10 digits required"),
+});
 
 const SignInScreen = () => {
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
-
   const navigator = useNavigation();
+
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const userLogin = (formData: FormData) => {
+    console.log(formData);
+
+    navigator.navigate("MainAppBottomTabs");
+  };
 
   return (
     <AppSafeView style={styles.container}>
@@ -34,15 +67,15 @@ const SignInScreen = () => {
           showsVerticalScrollIndicator={false}
         >
           <Image source={IMAGES.appLogo} style={styles.logo} />
-          <AppTextInput
-            value={Email}
-            onTextChange={(value) => setEmail(value)}
+          <AppTextInputController
+            control={control}
+            name="email"
             placeholder="Enter Email"
             keyboardType="email-address"
           />
-          <AppTextInput
-            value={Password}
-            onTextChange={(value) => setPassword(value)}
+          <AppTextInputController
+            control={control}
+            name="password"
             placeholder="Enter Password"
             secureTextEntry={true}
           />
@@ -52,7 +85,9 @@ const SignInScreen = () => {
           ></AppText>
           <AppButtons
             onPress={() => {
-              navigator.navigate("MainAppBottomTabs");
+              console.log("Hi");
+
+              handleSubmit(userLogin)();
             }}
             title="Login"
             textStyle={{ fontWeight: "500" }}
