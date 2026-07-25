@@ -34,6 +34,7 @@ const CheckoutScreen = () => {
   const insets = useSafeAreaInsets();
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(schema),
+    mode: "onChange",
   });
 
   const saveOrder = (formData: FormData) => {

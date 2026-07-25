@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   KeyboardAvoidingView,
   ScrollView,
@@ -22,6 +23,10 @@ import AppTextInputController from "../../components/textInputs/AppTextInputCont
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../config/firebaseConfig";
+import { showMessage } from "react-native-flash-message";
+import Toast from "react-native-toast-message";
 
 type FormData = yup.InferType<typeof schema>;
 
@@ -37,12 +42,8 @@ const schema = yup.object({
     .min(3, "Min 3 chars required"),
   password: yup
     .string()
-    .required("Mobile number is required")
-    .matches(
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      "Number must be only digits",
-    )
-    .min(10, "Min 10 digits required"),
+    .required("Password is required")
+    .min(6, "lenght should be 6"),
 });
 
 const SignInScreen = () => {
@@ -50,12 +51,39 @@ const SignInScreen = () => {
 
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(schema),
+    mode: "all",
   });
 
-  const userLogin = (formData: FormData) => {
+  const userLogin = async (formData: FormData) => {
     console.log(formData);
-
-    navigator.navigate("MainAppBottomTabs");
+    try {
+      const user = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password,
+      );
+      console.log(user);
+      Toast.show({
+        text1: "User logged in successfully",
+        type: "success",
+      });
+      navigator.navigate("MainAppBottomTabs");
+    } catch (error: any) {
+      console.log(error);
+      let errorMsg = "";
+      if (error.code === "auth/user-not-found") {
+        errorMsg = "User not found";
+      } else if (error.code === "auth/invalid-credential") {
+        errorMsg = "Invalid email or password";
+      } else {
+        errorMsg = "Something went wrong";
+      }
+      showMessage({ message: errorMsg, type: "danger" });
+      // Toast.show({
+      //   text1: errorMsg,
+      //   type: "error",
+      // });
+    }
   };
 
   return (

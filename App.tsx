@@ -23,7 +23,7 @@ export default function App() {
       <SafeAreaProvider>
         <NavigationContainer>
           <MainAppStack />
-          <FlashMessage position="center" />
+          <FlashMessage position="top" />
           <Toast />
         </NavigationContainer>
       </SafeAreaProvider>

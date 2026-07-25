@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   KeyboardAvoidingView,
   ScrollView,
@@ -18,13 +19,47 @@ import AppKeyboardAvoidingView from "../../components/keyboard/AppKeyboardAvoidi
 import AppText from "../../components/texts/AppText";
 import { AppColor } from "../../styles/colors";
 import { useNavigation } from "@react-navigation/native";
+// React-form-hook
+import AppTextInputController from "../../components/textInputs/AppTextInputController";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+type FormData = yup.InferType<typeof schema>;
+
+const schema = yup.object({
+  email: yup
+    .string()
+    .required("Email is required")
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "invalid email",
+    )
+
+    .min(3, "Min 3 chars required"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(6, "lenght should be 6"),
+  username: yup
+    .string()
+    .required("Name is required")
+    .min(3, "Min 3 chars required"),
+});
 
 const SignUpScreen = () => {
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
-  const [UserName, setUserName] = useState("");
-
   const navigator = useNavigation();
+
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(schema),
+    mode: "all",
+  });
+
+  const userSignup = (formData: FormData) => {
+    console.log(formData);
+    Alert.alert("Signed up successfully");
+    navigator.navigate("MainAppBottomTabs");
+  };
 
   return (
     <AppSafeView style={styles.container}>
@@ -35,21 +70,21 @@ const SignUpScreen = () => {
           showsVerticalScrollIndicator={false}
         >
           <Image source={IMAGES.appLogo} style={styles.logo} />
-          <AppTextInput
-            value={Email}
-            onTextChange={(value) => setEmail(value)}
+          <AppTextInputController
+            control={control}
+            name="email"
             placeholder="Enter Email"
             keyboardType="email-address"
           />
-          <AppTextInput
-            value={Password}
-            onTextChange={(value) => setPassword(value)}
+          <AppTextInputController
+            control={control}
+            name="password"
             placeholder="Enter Password"
             secureTextEntry={true}
           />
-          <AppTextInput
-            value={UserName}
-            onTextChange={(value) => setUserName(value)}
+          <AppTextInputController
+            control={control}
+            name="username"
             placeholder="Enter UserName"
           />
           <AppText
@@ -57,7 +92,9 @@ const SignUpScreen = () => {
             style={styles.appName}
           ></AppText>
           <AppButtons
-            onPress={() => {}}
+            onPress={() => {
+              handleSubmit(userSignup)();
+            }}
             title="Create New Account"
             textStyle={{ fontWeight: "500" }}
           />
