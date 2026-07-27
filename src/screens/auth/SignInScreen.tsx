@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   Image,
   KeyboardAvoidingView,
@@ -27,6 +28,10 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../config/firebaseConfig";
 import { showMessage } from "react-native-flash-message";
 import Toast from "react-native-toast-message";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { setLoading } from "../../store/reducers/commonSlice";
+import LoadingDailog from "../../components/loadingDailog/loadingDailog";
 
 type FormData = yup.InferType<typeof schema>;
 
@@ -47,6 +52,8 @@ const schema = yup.object({
 });
 
 const SignInScreen = () => {
+  const { isLoading } = useSelector((state: RootState) => state.commonSlice);
+  const dispatch = useDispatch();
   const navigator = useNavigation();
 
   const { control, handleSubmit } = useForm({
@@ -55,6 +62,7 @@ const SignInScreen = () => {
   });
 
   const userLogin = async (formData: FormData) => {
+    dispatch(setLoading(true));
     console.log(formData);
     try {
       const user = await signInWithEmailAndPassword(
@@ -63,12 +71,14 @@ const SignInScreen = () => {
         formData.password,
       );
       console.log(user);
+      dispatch(setLoading(false));
       Toast.show({
         text1: "User logged in successfully",
         type: "success",
       });
       navigator.navigate("MainAppBottomTabs");
     } catch (error: any) {
+      dispatch(setLoading(false));
       console.log(error);
       let errorMsg = "";
       if (error.code === "auth/user-not-found") {
@@ -94,41 +104,44 @@ const SignInScreen = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Image source={IMAGES.appLogo} style={styles.logo} />
-          <AppTextInputController
-            control={control}
-            name="email"
-            placeholder="Enter Email"
-            keyboardType="email-address"
-          />
-          <AppTextInputController
-            control={control}
-            name="password"
-            placeholder="Enter Password"
-            secureTextEntry={true}
-          />
-          <AppText
-            children={"Smart Ecommerce"}
-            style={styles.appName}
-          ></AppText>
-          <AppButtons
-            onPress={() => {
-              console.log("Hi");
+          <LoadingDailog visible={isLoading} />
+          <>
+            <Image source={IMAGES.appLogo} style={styles.logo} />
+            <AppTextInputController
+              control={control}
+              name="email"
+              placeholder="Enter Email"
+              keyboardType="email-address"
+            />
+            <AppTextInputController
+              control={control}
+              name="password"
+              placeholder="Enter Password"
+              secureTextEntry={true}
+            />
+            <AppText
+              children={"Smart Ecommerce"}
+              style={styles.appName}
+            ></AppText>
+            <AppButtons
+              onPress={() => {
+                console.log("Hi");
 
-              handleSubmit(userLogin)();
-            }}
-            title="Login"
-            textStyle={{ fontWeight: "500" }}
-          />
-          <AppButtons
-            onPress={() => {
-              navigator.navigate("SignUpScreen");
-            }}
-            title="Sign Up"
-            textStyle={{ fontWeight: "500" }}
-            isOutline={true}
-            style={styles.registerBtn}
-          />
+                handleSubmit(userLogin)();
+              }}
+              title="Login"
+              textStyle={{ fontWeight: "500" }}
+            />
+            <AppButtons
+              onPress={() => {
+                navigator.navigate("SignUpScreen");
+              }}
+              title="Sign Up"
+              textStyle={{ fontWeight: "500" }}
+              isOutline={true}
+              style={styles.registerBtn}
+            />
+          </>
         </ScrollView>
       </AppKeyboardAvoidingView>
     </AppSafeView>

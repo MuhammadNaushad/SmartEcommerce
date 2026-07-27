@@ -24,6 +24,13 @@ import AppTextInputController from "../../components/textInputs/AppTextInputCont
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../config/firebaseConfig";
+import { showMessage } from "react-native-flash-message";
+import { RootState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import LoadingDailog from "../../components/loadingDailog/loadingDailog";
+import { setLoading } from "../../store/reducers/commonSlice";
 
 type FormData = yup.InferType<typeof schema>;
 
@@ -48,6 +55,8 @@ const schema = yup.object({
 });
 
 const SignUpScreen = () => {
+  const { isLoading } = useSelector((state: RootState) => state.commonSlice);
+  const dispatch = useDispatch();
   const navigator = useNavigation();
 
   const { control, handleSubmit } = useForm({
@@ -55,10 +64,41 @@ const SignUpScreen = () => {
     mode: "all",
   });
 
-  const userSignup = (formData: FormData) => {
-    console.log(formData);
-    Alert.alert("Signed up successfully");
-    navigator.navigate("MainAppBottomTabs");
+  const userSignup = async (formData: FormData) => {
+    try {
+      dispatch(setLoading(true));
+
+      console.log(formData);
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password,
+      );
+      dispatch(setLoading(false));
+
+      Alert.alert("Signed up successfully");
+      navigator.navigate("MainAppBottomTabs");
+      return user.user;
+    } catch (error: any) {
+      dispatch(setLoading(false));
+
+      console.log(error);
+      let errorMsg = "";
+      if (error.code === "auth/email-already-in-use") {
+        errorMsg = "Email is already in use";
+      } else if (error.code === "auth/invalid-email") {
+        errorMsg = "Invalid email";
+      } else if (error.code === "auth/weak-password") {
+        errorMsg = "Password is too weak";
+      } else {
+        errorMsg = "Something went wrong";
+      }
+      showMessage({ message: errorMsg, type: "danger" });
+      // Toast.show({
+      //   text1: errorMsg,
+      //   type: "error",
+      // });
+    }
   };
 
   return (
@@ -69,7 +109,14 @@ const SignUpScreen = () => {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
+          <LoadingDailog visible={isLoading} />
+
           <Image source={IMAGES.appLogo} style={styles.logo} />
+          <AppTextInputController
+            control={control}
+            name="username"
+            placeholder="Enter UserName"
+          />
           <AppTextInputController
             control={control}
             name="email"
@@ -82,11 +129,7 @@ const SignUpScreen = () => {
             placeholder="Enter Password"
             secureTextEntry={true}
           />
-          <AppTextInputController
-            control={control}
-            name="username"
-            placeholder="Enter UserName"
-          />
+
           <AppText
             children={"Smart Ecommerce"}
             style={styles.appName}
