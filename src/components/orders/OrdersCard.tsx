@@ -5,8 +5,9 @@ import { s, vs } from "react-native-size-matters";
 import { AppColor } from "../../styles/colors";
 import AppText from "../texts/AppText";
 import { OrdersItemProps } from "../../types/orderType";
+import { formatTimestamp } from "../../utils/timeUtils";
 
-interface OrderProps {
+export interface OrderProps {
   item: OrdersItemProps;
 }
 
@@ -17,12 +18,12 @@ const OrdersCard = ({ item }: OrderProps) => {
       <View style={styles.divider}></View>
       <View style={styles.priceView}>
         <AppText>Total Price :</AppText>
-        <AppText variant="bold">{item?.price ?? 0}</AppText>
+        <AppText variant="bold">${item?.getGrandTotal ?? 0}</AppText>
       </View>
       <View style={styles.dateView}>
         <AppText>Date :</AppText>
         <AppText variant="bold" style={{ color: AppColor.red }}>
-          {item?.date ?? 0}
+          {formatTimestamp(item?.createdAt ?? 0)}
         </AppText>
       </View>
     </View>

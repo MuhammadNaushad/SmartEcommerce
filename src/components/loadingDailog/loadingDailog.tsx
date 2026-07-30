@@ -39,8 +39,10 @@ const styles = StyleSheet.create({
   dialogBox: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    paddingVertical: 24,
+    paddingVertical: 15,
     paddingHorizontal: 32,
+    width: "65%",
+
     flexDirection: "row",
     alignItems: "center",
     gap: 16,

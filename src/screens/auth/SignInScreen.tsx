@@ -32,6 +32,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { setLoading } from "../../store/reducers/commonSlice";
 import LoadingDailog from "../../components/loadingDailog/loadingDailog";
+import { setUserData } from "../../store/reducers/userSlice";
 
 type FormData = yup.InferType<typeof schema>;
 
@@ -77,6 +78,20 @@ const SignInScreen = () => {
         type: "success",
       });
       navigator.navigate("MainAppBottomTabs");
+      console.log(JSON.stringify(user, null, 3));
+      //❌ Wrong — poora Firebase user object mat bhejo
+      // dispatch(setUserData(result.user));
+
+      // ✅ Correct — sirf plain data extract karo
+      dispatch(
+        setUserData({
+          uid: user.user.uid,
+          email: user.user.email,
+          displayName: user.user.displayName,
+          photoURL: user.user.photoURL,
+          emailVerified: user.user.emailVerified,
+        }),
+      );
     } catch (error: any) {
       dispatch(setLoading(false));
       console.log(error);

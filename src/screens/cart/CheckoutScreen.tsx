@@ -2,7 +2,12 @@ import { StatusBar, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { commonStyles, paddingHorizontal } from "../../styles/sharedStyles";
 import { s, vs } from "react-native-size-matters";
-import { IS_ANDROID, IS_IOS } from "../../constants/constants";
+import {
+  IS_ANDROID,
+  IS_IOS,
+  ShippingFee,
+  Tax,
+} from "../../constants/constants";
 import AppSafeView from "../../components/views/AppSafeView";
 import { AppColor } from "../../styles/colors";
 import AppTextInput from "../../components/textInputs/TextInput";
@@ -12,6 +17,15 @@ import AppTextInputController from "../../components/textInputs/AppTextInputCont
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { addDoc, collection, doc } from "firebase/firestore";
+import { firestore } from "../../config/firebaseConfig";
+import { showMessage } from "react-native-flash-message";
+import LoadingDailog from "../../components/loadingDailog/loadingDailog";
+import { setLoading } from "../../store/reducers/commonSlice";
+import { useNavigation } from "@react-navigation/native";
+import { emptyCart } from "../../store/reducers/cartSlice";
 
 type FormData = yup.InferType<typeof schema>;
 
@@ -32,13 +46,53 @@ const schema = yup.object({
 });
 const CheckoutScreen = () => {
   const insets = useSafeAreaInsets();
+
+  const { userData } = useSelector((state: RootState) => state.userSlice);
+  const { items } = useSelector((state: RootState) => state.cartSlice);
+  const { isLoading } = useSelector((state: RootState) => state.commonSlice);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  const getTotalAmount = items.reduce((acc, item) => acc + item.sum, 0);
+  const getGrandTotal = getTotalAmount + Tax + ShippingFee;
+
+  console.log("================userdata====================");
+  console.log(JSON.stringify(userData, null, 3));
+  console.log("====================================");
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange",
   });
 
-  const saveOrder = (formData: FormData) => {
-    console.log(formData);
+  const saveOrder = async (formData: FormData) => {
+    try {
+      dispatch(setLoading(true));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const orderBody = {
+        ...formData,
+        items,
+        getTotalAmount,
+        createdAt: new Date(),
+        getGrandTotal,
+      };
+      const userOrderRef = collection(
+        doc(firestore, "users", userData.uid),
+        "orders",
+      );
+      addDoc(userOrderRef, orderBody);
+      //Admin Orders
+      const ordersRef = collection(firestore, "orders");
+      await addDoc(ordersRef, orderBody);
+      //
+      dispatch(setLoading(false));
+      showMessage({ type: "success", message: "Order Placed successfully" });
+      navigation.goBack();
+      dispatch(emptyCart());
+    } catch (error) {
+      dispatch(setLoading(false));
+      console.log(error);
+      showMessage({ type: "danger", message: "Something wnt wrong" });
+    }
   };
 
   return (
@@ -48,6 +102,8 @@ const CheckoutScreen = () => {
         justifyContent: "space-between",
       }}
     >
+      <LoadingDailog visible={isLoading} />
+
       <View style={{ paddingHorizontal: paddingHorizontal }}>
         <View style={styles.inputsContainer}>
           <AppTextInputController
