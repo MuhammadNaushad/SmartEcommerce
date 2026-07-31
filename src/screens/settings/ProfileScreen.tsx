@@ -11,6 +11,8 @@ import LogoutDialog from "../../components/alertDailogs/logoutDailog";
 import { RootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { showLogoutDailog } from "../../store/reducers/commonSlice";
+import { SheetManager } from "react-native-actions-sheet";
+import LanguageBottomSheet from "../../language/LanguageBottomSheet";
 
 const ProfileScreen = () => {
   const { isLogout } = useSelector((state: RootState) => state.commonSlice);
@@ -39,13 +41,19 @@ const ProfileScreen = () => {
           }}
           title={"My Orders"}
         />
-        <ProfileSectionButton onPress={() => {}} title={"Languages"} />
+        <ProfileSectionButton
+          onPress={() => {
+            SheetManager.show("LANG_SHEET");
+          }}
+          title={"Languages"}
+        />
         <ProfileSectionButton
           onPress={() => {
             dispatch(showLogoutDailog(true));
           }}
           title={"Log Out"}
         />
+        <LanguageBottomSheet />
       </View>
     </AppSafeView>
   );
