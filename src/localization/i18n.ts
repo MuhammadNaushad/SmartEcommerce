@@ -1,8 +1,7 @@
-import { FallbackLng } from "./../../node_modules/i18next/typescript/options.d";
 import { initReactI18next } from "react-i18next";
 import i18n from "i18next";
-import en from "./en.json";
-import de from "./de.json";
+import en from "./json/en.json";
+import de from "./json/de.json";
 
 const LANGUAGES = {
   en: {
@@ -16,7 +15,7 @@ const LANGUAGES = {
 
 i18n.use(initReactI18next).init({
   resources: LANGUAGES,
-  fallbackLng: "de",
+  fallbackLng: "en",
   defaultNS: "translation",
   ns: ["translation"],
   react: {

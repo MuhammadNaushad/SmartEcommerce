@@ -1,23 +1,46 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
 import AppText from "../components/texts/AppText";
 import AppButtons from "../components/buttons/AppButtons";
 import { s, vs } from "react-native-size-matters";
 import RadioWithTitle from "../components/textInputs/RadioWithTitle";
+import { languageList } from "../localization/LanguageList";
+import i18n from "../localization/i18n";
 
 const LanguageBottomSheet = () => {
+  const [language, setlanguage] = useState(i18n.language);
+
+  const onLanguagePress = (code: string) => {
+    setlanguage(code);
+  };
+
+  const submit = () => {
+    SheetManager.hide("LANG_SHEET");
+    i18n.changeLanguage(language);
+  };
   return (
     <ActionSheet id="LANG_SHEET">
       <View style={styles.container}>
         <AppText style={{ marginBottom: vs(10), textAlign: "center" }}>
           Change Language
         </AppText>
-        <RadioWithTitle title="English" selected={true} />
-        <RadioWithTitle title="Dutch" selected={true} />
-        <RadioWithTitle title="Urdu" selected={false} />
-        <AppButtons title="Change" onPress={() => {}} />
+
+        {languageList.map((lang) => (
+          <RadioWithTitle
+            key={lang.code}
+            title={lang.label}
+            onPress={() => onLanguagePress(lang.code)}
+            selected={language === lang.code}
+          />
+        ))}
+        <AppButtons
+          title="Change"
+          onPress={() => {
+            submit();
+          }}
+        />
       </View>
     </ActionSheet>
   );

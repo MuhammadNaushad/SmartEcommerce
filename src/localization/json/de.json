@@ -1,0 +1,21 @@
+{
+  "welcome": "Hallo {{userName}} bij SmartEcommerce",
+  "common": {
+    "messages": {
+      "welcome": "Hello User!"
+    }
+  },
+  "login": "Inloggen",
+  "sign_up": "Registreren",
+  "Email": "E-mail",
+  "Password": "Wachtwoord",
+  "user_not_found": "Gebruiker niet gevonden",
+  "invalid_email_or_password": "Ongeldig e-mailadres of wachtwoord",
+  "something_went_wrong": "Er is iets misgegaan",
+  "user_logged_in_successfully": "Gebruiker succesvol ingelogd",
+  "email_is_required": "E-mail is verplicht",
+  "invalid_email": "Ongeldig e-mailadres",
+  "min_3_chars_required": "Minimaal 3 tekens vereist",
+  "password_is_required": "Wachtwoord is verplicht",
+  "lenght_should_be_6": "Lengte moet 6 zijn"
+}

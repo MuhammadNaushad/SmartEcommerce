@@ -1,8 +1,0 @@
-{
-  "welcome": "Hallo {{userName}} bij SmartEcommerce",
-  "common": {
-    "messages": {
-      "welcome": "Hello User!"
-    }
-  }
-}

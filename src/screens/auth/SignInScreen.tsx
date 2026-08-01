@@ -33,25 +33,25 @@ import { RootState } from "../../store/store";
 import { setLoading } from "../../store/reducers/commonSlice";
 import LoadingDailog from "../../components/loadingDailog/loadingDailog";
 import { setUserData } from "../../store/reducers/userSlice";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 type FormData = yup.InferType<typeof schema>;
 
 const schema = yup.object({
   email: yup
     .string()
-    .required("Email is required")
+    .required(`${t("email_is_required")}`)
     .matches(
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      "invalid email",
+      `${t("invalid_email")}`,
     )
-
-    .min(3, "Min 3 chars required"),
+    .min(3, `${t("min_3_chars_required")}`),
   password: yup
     .string()
-    .required("Password is required")
-    .min(6, "lenght should be 6"),
+    .required(`${t("password_is_required")}`)
+    .min(6, `${t("lenght_should_be_6")}`),
 });
-
 const SignInScreen = () => {
   const { isLoading } = useSelector((state: RootState) => state.commonSlice);
   const dispatch = useDispatch();
@@ -74,7 +74,7 @@ const SignInScreen = () => {
       console.log(user);
       dispatch(setLoading(false));
       Toast.show({
-        text1: "User logged in successfully",
+        text1: `${t("user_logged_in_successfully")}`,
         type: "success",
       });
       navigator.navigate("MainAppBottomTabs");
@@ -97,11 +97,11 @@ const SignInScreen = () => {
       console.log(error);
       let errorMsg = "";
       if (error.code === "auth/user-not-found") {
-        errorMsg = "User not found";
+        errorMsg = `${t("user_not_found")}`;
       } else if (error.code === "auth/invalid-credential") {
-        errorMsg = "Invalid email or password";
+        errorMsg = `${t("invalid_email_or_password")}`;
       } else {
-        errorMsg = "Something went wrong";
+        errorMsg = `${t("something_went_wrong")}`;
       }
       showMessage({ message: errorMsg, type: "danger" });
       // Toast.show({
@@ -125,13 +125,13 @@ const SignInScreen = () => {
             <AppTextInputController
               control={control}
               name="email"
-              placeholder="Enter Email"
+              placeholder={t("Email")}
               keyboardType="email-address"
             />
             <AppTextInputController
               control={control}
               name="password"
-              placeholder="Enter Password"
+              placeholder={t("Password")}
               secureTextEntry={true}
             />
             <AppText
@@ -144,14 +144,14 @@ const SignInScreen = () => {
 
                 handleSubmit(userLogin)();
               }}
-              title="Login"
+              title={t("login")}
               textStyle={{ fontWeight: "500" }}
             />
             <AppButtons
               onPress={() => {
                 navigator.navigate("SignUpScreen");
               }}
-              title="Sign Up"
+              title={t("sign_up")}
               textStyle={{ fontWeight: "500" }}
               isOutline={true}
               style={styles.registerBtn}
