@@ -13,11 +13,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { showLogoutDailog } from "../../store/reducers/commonSlice";
 import { SheetManager } from "react-native-actions-sheet";
 import LanguageBottomSheet from "../../language/LanguageBottomSheet";
+import { useTranslation } from "react-i18next";
 
 const ProfileScreen = () => {
   const { isLogout } = useSelector((state: RootState) => state.commonSlice);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const { t } = useTranslation();
   return (
     <AppSafeView>
       <LogoutDialog
@@ -32,7 +34,11 @@ const ProfileScreen = () => {
       />
       <HomeHeaders />
       <AppText variant="bold" style={{ marginTop: s(10) }}>
-        Hello Naushad
+        {t("welcome", { userName: "Naushad" })}
+      </AppText>
+
+      <AppText variant="bold" style={{ marginTop: s(10) }}>
+        {t("common.messages.welcome")}
       </AppText>
       <View style={{ paddingHorizontal: paddingHorizontal }}>
         <ProfileSectionButton
