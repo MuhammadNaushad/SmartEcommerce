@@ -11,6 +11,12 @@ export const store = configureStore({
     productSlice: productSlice,
     userSlice: userSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["user/setUserData", "common/setLoading"],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -13,9 +13,7 @@ const LogoutDialog = ({ visible, onCancel, onConfirm }: LogoutDialogProps) => (
     <View style={styles.overlay}>
       <View style={styles.alertBox}>
         <Text style={styles.alertTitle}>Logout</Text>
-        <Text style={styles.alertMessage}>
-          Kya aap sach mein logout karna chahte hain?
-        </Text>
+        <Text style={styles.alertMessage}>Are you sure, want to logout?</Text>
         <View style={styles.alertButtons}>
           <TouchableOpacity style={styles.cancelBtn} onPress={onCancel}>
             <Text style={styles.cancelText}>Cancel</Text>

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AppSafeView from "../../components/views/AppSafeView";
 import HomeHeaders from "../../components/headers/HomeHeaders";
 import ProfileSectionButton from "../../components/buttons/ProfileSectionButton";
@@ -14,12 +14,52 @@ import { showLogoutDailog } from "../../store/reducers/commonSlice";
 import { SheetManager } from "react-native-actions-sheet";
 import LanguageBottomSheet from "../../language/LanguageBottomSheet";
 import { useTranslation } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setUserData } from "../../store/reducers/userSlice";
 
 const ProfileScreen = () => {
   const { isLogout } = useSelector((state: RootState) => state.commonSlice);
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { t } = useTranslation();
+  const [Expense, setExpense] = useState(0);
+
+  const saveData = async (val: string) => {
+    try {
+      await AsyncStorage.setItem("expense", val.toString());
+    } catch (error) {}
+  };
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("expense");
+      if (value !== null) {
+        // value previously stored
+        setExpense(Number(value));
+        console.log(Expense);
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+
+  //Clear Data
+  const clearLocalStoredData = async () => {
+    try {
+      await AsyncStorage.removeItem("expense");
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getData();
+    return () => {};
+  }, []);
+
+  const handleLogut = async () => {
+    dispatch(showLogoutDailog(false));
+    await AsyncStorage.removeItem("USER_DATA");
+    navigation.navigate("AuthStack");
+  };
+
   return (
     <AppSafeView>
       <LogoutDialog
@@ -27,19 +67,16 @@ const ProfileScreen = () => {
         onCancel={() => {
           dispatch(showLogoutDailog(false));
         }}
-        onConfirm={() => {
-          dispatch(showLogoutDailog(false));
-          navigation.navigate("AuthStack");
-        }}
+        onConfirm={handleLogut}
       />
       <HomeHeaders />
       <AppText variant="bold" style={{ marginTop: s(10) }}>
-        {t("welcome", { userName: "Naushad" })}
+        {t("welcome", { userName: { Expense } })}
       </AppText>
-
-      <AppText variant="bold" style={{ marginTop: s(10) }}>
+      {/* <Text>{Expense}</Text> */}
+      {/* <AppText variant="bold" style={{ marginTop: s(10) }}>
         {t("common.messages.welcome")}
-      </AppText>
+      </AppText> */}
       <View style={{ paddingHorizontal: paddingHorizontal }}>
         <ProfileSectionButton
           onPress={() => {
@@ -54,8 +91,11 @@ const ProfileScreen = () => {
           title={"Languages"}
         />
         <ProfileSectionButton
-          onPress={() => {
+          onPress={async () => {
             dispatch(showLogoutDailog(true));
+            /*  setExpense(Expense + 10);
+            saveData(`${Expense + 10}`);
+            clearLocalStoredData(); */
           }}
           title={"Log Out"}
         />
