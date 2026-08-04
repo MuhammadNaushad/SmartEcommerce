@@ -22,13 +22,20 @@ const HomeScreen = () => {
 
   // const [products, setProducts] = useState<ProductProps[]>([]);
   const fetchData = async () => {
-    dispatch(setLoading(true));
-    const data = await getProductsData();
-    // setProducts(data);
-    dispatch(setProducts(data));
-    dispatch(setLoading(false));
-    console.log("==============FireStore DAta======================");
-    console.log("====================================");
+    try {
+      dispatch(setLoading(true));
+      const data = await getProductsData();
+      dispatch(setLoading(false));
+
+      // setProducts(data);
+      dispatch(setProducts(data));
+      console.log("==============FireStore DAta======================");
+      console.log("====================================");
+    } catch (error) {
+      dispatch(setLoading(false));
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
   useEffect(() => {
     fetchData();
@@ -38,7 +45,7 @@ const HomeScreen = () => {
   return (
     <AppSafeView>
       <HomeHeaders />
-      {productsList.length === 0 && isLoading ? (
+      {isLoading ? (
         <LoadingDailog visible={isLoading} />
       ) : (
         <FlatList

@@ -33,26 +33,26 @@ import { RootState } from "../../store/store";
 import { setLoading } from "../../store/reducers/commonSlice";
 import LoadingDailog from "../../components/loadingDailog/loadingDailog";
 import { setUserData } from "../../store/reducers/userSlice";
-import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 
-type FormData = yup.InferType<typeof schema>;
-
-const schema = yup.object({
-  email: yup
-    .string()
-    .required(`${t("email_is_required")}`)
-    .matches(
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      `${t("invalid_email")}`,
-    )
-    .min(3, `${t("min_3_chars_required")}`),
-  password: yup
-    .string()
-    .required(`${t("password_is_required")}`)
-    .min(6, `${t("lenght_should_be_6")}`),
-});
 const SignInScreen = () => {
+  type FormData = yup.InferType<typeof schema>;
+
+  const schema = yup.object({
+    email: yup
+      .string()
+      .required(`${t("email_is_required")}`)
+      .matches(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        `${t("invalid_email")}`,
+      )
+      .min(3, `${t("min_3_chars_required")}`),
+    password: yup
+      .string()
+      .required(`${t("password_is_required")}`)
+      .min(6, `${t("lenght_should_be_6")}`),
+  });
+
   const { isLoading } = useSelector((state: RootState) => state.commonSlice);
   const dispatch = useDispatch();
   const navigator = useNavigation();

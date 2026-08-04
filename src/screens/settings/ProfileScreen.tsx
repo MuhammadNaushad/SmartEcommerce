@@ -16,6 +16,8 @@ import LanguageBottomSheet from "../../language/LanguageBottomSheet";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setUserData } from "../../store/reducers/userSlice";
+import { signOut } from "@firebase/auth";
+import { auth } from "../../config/firebaseConfig";
 
 const ProfileScreen = () => {
   const { isLogout } = useSelector((state: RootState) => state.commonSlice);
@@ -24,18 +26,10 @@ const ProfileScreen = () => {
   const { t } = useTranslation();
   const [Expense, setExpense] = useState(0);
 
-  const saveData = async (val: string) => {
+  const getLang = async () => {
     try {
-      await AsyncStorage.setItem("expense", val.toString());
-    } catch (error) {}
-  };
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("expense");
+      const value = await AsyncStorage.getItem("LANG");
       if (value !== null) {
-        // value previously stored
-        setExpense(Number(value));
-        console.log(Expense);
       }
     } catch (e) {
       // error reading value
@@ -50,14 +44,14 @@ const ProfileScreen = () => {
   };
 
   useEffect(() => {
-    getData();
-    return () => {};
+    getLang();
   }, []);
 
   const handleLogut = async () => {
     dispatch(showLogoutDailog(false));
     await AsyncStorage.removeItem("USER_DATA");
     navigation.navigate("AuthStack");
+    await signOut(auth);
   };
 
   return (
