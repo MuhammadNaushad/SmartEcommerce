@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Smart E-commerce",
-    "slug": "Smart E-commerce",
+    "slug": "SmartE-commerce",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/appicon.png",
@@ -16,11 +16,28 @@
         "backgroundImage": "./assets/appicon.png",
         "monochromeImage": "./assets/appicon.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.shad.smartecommerce"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "image": "./assets/appsplash.png",
+          "imageWidth": 200
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2c798cc8-f28f-460b-9301-6516b4ee7807"
+      }
+    },
+    "owner": "naushad.npg"
   }
 }
